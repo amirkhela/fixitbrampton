@@ -1,0 +1,9 @@
+{
+  "name": "fixitbrampton",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fix It Brampton — Handyman Services",
+  "dependencies": {
+    "resend": "^4.0.0"
+  }
+}
