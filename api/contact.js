@@ -15,9 +15,10 @@ module.exports = async function handler(req, res) {
 
   try {
     await resend.emails.send({
-      from: "Fix It Brampton <onboarding@resend.dev>",
+      from: "Fix It Brampton <fixit@clawdmarketing.com>",
       to: "fixitbrampton@gmail.com",
       bcc: "amir.khela@gmail.com",
+      reply_to: "fixitbrampton@gmail.com",
       subject: `New inquiry from ${name}`,
       text: [
         "New Fix It Brampton inquiry:",
