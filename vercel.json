@@ -12,7 +12,5 @@
       ]
     }
   ],
-  "redirects": [
-    { "source": "/services", "destination": "/#services", "permanent": false }
-  ]
+  "redirects": []
 }

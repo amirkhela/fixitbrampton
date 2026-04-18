@@ -1070,6 +1070,12 @@ def regenerate_sitemap(all_slugs):
         '    <xhtml:link rel="alternate" hreflang="pa" href="https://fixitbrampton.ca/"/>',
         '    <xhtml:link rel="alternate" hreflang="x-default" href="https://fixitbrampton.ca/"/>',
         '  </url>',
+        '  <url>',
+        '    <loc>https://fixitbrampton.ca/services</loc>',
+        f'    <lastmod>{today}</lastmod>',
+        '    <changefreq>weekly</changefreq>',
+        '    <priority>0.9</priority>',
+        '  </url>',
     ]
     # Service pages
     for slug in sorted(all_slugs):
@@ -1092,6 +1098,202 @@ def regenerate_sitemap(all_slugs):
         ]
     lines.append('</urlset>')
     SITEMAP.write_text("\n".join(lines), encoding="utf-8")
+
+
+def generate_services_index():
+    """Write services/index.html — the browsable directory of all 18 services × 22 areas."""
+    today = date.today().isoformat()
+    nav_chips = "\n".join(
+        f'          <a href="#svc-{svc_slug}" class="idx-nav-chip">{esc(svc["name"])}</a>'
+        for svc_slug, svc in SERVICES.items()
+    )
+    area_nav_chips = "\n".join(
+        f'          <a href="#area-{area_slug}" class="idx-nav-chip idx-nav-chip--area">{esc(area["display"])}</a>'
+        for area_slug, area in AREAS.items()
+    )
+
+    # By-service sections (primary)
+    by_service_sections = []
+    item_list_elems = []
+    pos = 1
+    for svc_slug, svc in SERVICES.items():
+        pills = []
+        for area_slug, area in AREAS.items():
+            url = f"https://fixitbrampton.ca/services/{svc_slug}-{area_slug}"
+            item_list_elems.append(
+                f'    {{"@type": "ListItem", "position": {pos}, "url": "{url}", '
+                f'"name": "{esc(svc["name"])} in {esc(area["display"])}"}}'
+            )
+            pos += 1
+            pills.append(
+                f'          <li><a href="/services/{svc_slug}-{area_slug}" class="idx-pill">'
+                f'<span class="idx-pill-en">{esc(area["display"])}</span>'
+                f'<span class="idx-pill-pa">{esc(area["pa"])}</span>'
+                f'</a></li>'
+            )
+        by_service_sections.append(f'''
+      <section class="idx-service-section" id="svc-{svc_slug}">
+        <div class="idx-service-head">
+          <div>
+            <span class="idx-service-pa">{esc(svc["pa"])}</span>
+            <h2 class="idx-service-title">{esc(svc["name"])}</h2>
+            <p class="idx-service-intro">{esc(svc["intro"])}</p>
+          </div>
+          <div class="idx-service-meta">
+            <span class="idx-price">From ${svc["price_from"]}</span>
+            <span class="idx-price-hint">{esc(svc["price_hint"])}</span>
+          </div>
+        </div>
+        <p class="idx-section-label">Available in {len(AREAS)} neighbourhoods · <span class="gurmukhi">{len(AREAS)} ਇਲਾਕਿਆਂ ਵਿੱਚ</span></p>
+        <ul class="idx-area-grid" role="list">
+{chr(10).join(pills)}
+        </ul>
+      </section>''')
+
+    # By-area sections (secondary — same data, second axis)
+    by_area_sections = []
+    for area_slug, area in AREAS.items():
+        pills = []
+        for svc_slug, svc in SERVICES.items():
+            pills.append(
+                f'          <li><a href="/services/{svc_slug}-{area_slug}" class="idx-pill">'
+                f'<span class="idx-pill-en">{esc(svc["name"])}</span>'
+                f'</a></li>'
+            )
+        parent = area["parent"]
+        parent_tag = f' <span class="idx-area-parent">· {esc(parent)}</span>' if parent else ''
+        by_area_sections.append(f'''
+      <section class="idx-area-section" id="area-{area_slug}">
+        <div class="idx-area-head">
+          <h3 class="idx-area-title">{esc(area["display"])}{parent_tag}</h3>
+          <p class="idx-area-pa">{esc(area["pa"])}</p>
+        </div>
+        <ul class="idx-svc-grid" role="list">
+{chr(10).join(pills)}
+        </ul>
+      </section>''')
+
+    item_list_json = ",\n".join(item_list_elems)
+    total_pages = len(SERVICES) * len(AREAS)
+
+    html = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Services · Every Neighbourhood | Fix It Brampton</title>
+  <meta name="description" content="Browse every handyman service Fix It Brampton offers across {len(AREAS)} Brampton and GTA-west neighbourhoods. Punjabi-speaking, flat-rate, same-day text replies. {total_pages} dedicated service pages.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://fixitbrampton.ca/services">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/logo-mark.svg">
+
+  <meta property="og:title" content="All Services · Fix It Brampton">
+  <meta property="og:description" content="Every handyman service across every Brampton neighbourhood. Punjabi-speaking. {total_pages} dedicated pages.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fixitbrampton.ca/services">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600&family=Noto+Serif+Gurmukhi:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://fixitbrampton.ca/"}},
+      {{"@type": "ListItem", "position": 2, "name": "All Services", "item": "https://fixitbrampton.ca/services"}}
+    ]
+  }}
+  </script>
+
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Fix It Brampton — every service across every neighbourhood",
+    "numberOfItems": {total_pages},
+    "itemListElement": [
+{item_list_json}
+    ]
+  }}
+  </script>
+</head>
+<body>
+{HEADER}
+
+  <main>
+    <nav class="idx-breadcrumb" aria-label="Breadcrumb">
+      <div class="container">
+        <a href="/">Home</a>
+        <span aria-hidden="true">›</span>
+        <span>All Services</span>
+      </div>
+    </nav>
+
+    <section class="idx-hero">
+      <div class="container idx-hero-inner">
+        <span class="section-eyebrow">Directory · <span class="gurmukhi">ਸੇਵਾਵਾਂ ਦੀ ਸੂਚੀ</span></span>
+        <h1 class="idx-hero-title">Every service. <em>Every neighbourhood.</em></h1>
+        <p class="idx-hero-lede">We built a dedicated page for every handyman service in every corner of Brampton and the surrounding GTA-west. {len(SERVICES)} services × {len(AREAS)} neighbourhoods = <strong>{total_pages} pages</strong>. Find the one that matches you.</p>
+        <div class="idx-hero-stats">
+          <span><strong>{len(SERVICES)}</strong> services</span>
+          <span><strong>{len(AREAS)}</strong> neighbourhoods</span>
+          <span><strong>{total_pages}</strong> pages</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="idx-jump" aria-label="Jump to service">
+      <div class="container">
+        <p class="idx-jump-label"><span class="en">Jump to a service</span> <span class="gurmukhi">· ਸੇਵਾ ਚੁਣੋ</span></p>
+        <div class="idx-nav-row">
+{nav_chips}
+        </div>
+      </div>
+    </section>
+
+    <div class="container idx-body">
+      <div class="idx-axis-tabs">
+        <a href="#by-service" class="idx-axis-tab idx-axis-tab--active">By Service</a>
+        <a href="#by-area" class="idx-axis-tab">By Neighbourhood</a>
+      </div>
+
+      <div id="by-service">
+{"".join(by_service_sections)}
+      </div>
+
+      <section class="idx-area-wrap" id="by-area">
+        <span class="section-eyebrow">By Neighbourhood · <span class="gurmukhi">ਇਲਾਕੇ ਅਨੁਸਾਰ</span></span>
+        <h2 class="idx-axis-title">Prefer to browse <em>by area?</em></h2>
+        <p class="idx-axis-lede">Every neighbourhood we serve, with all {len(SERVICES)} services listed underneath. Fastest way to find the right page if you already know where you live.</p>
+        <div class="idx-area-jump">
+{area_nav_chips}
+        </div>
+        {"".join(by_area_sections)}
+      </section>
+
+      <section class="idx-outro">
+        <h2 class="idx-outro-title">Not sure which page <em>fits your job?</em></h2>
+        <p>Just text a photo to <a href="sms:2892753973" class="idx-phone">(289) 275-3973</a> and we'll tell you straight — flat price, realistic arrival window, or an honest "that's not our trade." We speak Punjabi, Hindi, and English.</p>
+        <div class="idx-outro-actions">
+          <a href="sms:2892753973" class="btn btn-primary">Text (289) 275-3973</a>
+          <a href="/#contact" class="btn btn-secondary">Get a Free Quote</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+{FOOTER}
+  <script src="/script.js"></script>
+</body>
+</html>'''
+
+    out = SERVICES_DIR / "index.html"
+    out.write_text(html, encoding="utf-8")
+    return total_pages
 
 
 def main():
@@ -1119,8 +1321,10 @@ def main():
     }
     STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
     regenerate_sitemap(all_slugs)
+    total = generate_services_index()
     print(f"Generated {len(generated)} pages (matrix = {len(SERVICES) * len(AREAS)}, protected = {len(PROTECTED)})")
-    print(f"Sitemap: {len(all_slugs)} service URLs + 1 home + 7 anchors")
+    print(f"Services directory: /services/index.html with {total} linked pages")
+    print(f"Sitemap: {len(all_slugs)} service URLs + 1 home + 1 directory + 7 anchors")
 
 
 if __name__ == "__main__":
