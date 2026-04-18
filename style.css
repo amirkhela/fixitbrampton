@@ -837,40 +837,6 @@ a.service-card:hover::after {
 }
 
 /* ======================================================
-   WhatsApp button variant
-   ====================================================== */
-.btn-whatsapp {
-  background: #25D366;
-  color: #0b3d1e;
-  box-shadow: 0 2px 0 #128C4B, var(--shadow-md);
-}
-.btn-whatsapp:hover {
-  background: #20b658;
-  color: #0b3d1e;
-  box-shadow: 0 2px 0 #0e6d39, var(--shadow-lg);
-  transform: translateY(-1px);
-}
-.btn-whatsapp svg { color: #0b3d1e; }
-
-.wa-icon-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: #25D366;
-  color: #0b3d1e;
-  box-shadow: 0 2px 0 #128C4B, var(--shadow-sm);
-  transition: transform 0.18s ease, box-shadow 0.2s;
-  flex-shrink: 0;
-}
-.wa-icon-link:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 0 #128C4B, var(--shadow-md);
-  color: #0b3d1e;
-}
-
-/* ======================================================
    Pricing Transparency
    ====================================================== */
 .pricing {
@@ -1095,10 +1061,6 @@ a.service-card:hover::after {
 .floating-cta .fc-text {
   background: var(--amber);
   color: var(--paper);
-}
-.floating-cta .fc-wa {
-  background: #25D366;
-  color: #0b3d1e;
 }
 @media (min-width: 768px) {
   .floating-cta { display: none; }
