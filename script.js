@@ -8,19 +8,21 @@
     var els = document.querySelectorAll("[data-en]");
     for (var i = 0; i < els.length; i++) {
       var text = els[i].getAttribute("data-" + lang);
-      if (text) els[i].textContent = text;
+      if (text !== null && text !== undefined) els[i].textContent = text;
     }
-    langLabel.textContent = lang === "en" ? "ਪੰਜਾਬੀ" : "English";
+    if (langLabel) langLabel.textContent = lang === "en" ? "ਪੰਜਾਬੀ" : "English";
     document.documentElement.lang = lang === "pa" ? "pa" : "en";
     try {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch (e) {}
   }
 
-  langToggle.addEventListener("click", function () {
-    var current = localStorage.getItem(STORAGE_KEY) || "en";
-    setLang(current === "en" ? "pa" : "en");
-  });
+  if (langToggle) {
+    langToggle.addEventListener("click", function () {
+      var current = localStorage.getItem(STORAGE_KEY) || "en";
+      setLang(current === "en" ? "pa" : "en");
+    });
+  }
 
   // Restore saved language
   var saved = null;
@@ -29,8 +31,13 @@
   } catch (e) {}
   if (saved === "pa") setLang("pa");
 
+  // --- Footer year ---
+  var yearEl = document.getElementById("footerYear");
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
   // --- Contact Form ---
   var form = document.getElementById("contactForm");
+  if (!form) return;
   var status = document.getElementById("formStatus");
 
   form.addEventListener("submit", function (e) {
@@ -46,8 +53,12 @@
       message: form.message.value.trim(),
     };
 
+    var lang = localStorage.getItem(STORAGE_KEY) || "en";
+
     if (!data.name || !data.phone || !data.message) {
-      status.textContent = "Please fill in all fields.";
+      status.textContent = lang === "pa"
+        ? "ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਖੇਤਰ ਭਰੋ।"
+        : "Please fill in all fields.";
       status.className = "form-status error";
       btn.disabled = false;
       return;
@@ -65,11 +76,10 @@
       })
       .then(function (result) {
         if (result.ok) {
-          var lang = localStorage.getItem(STORAGE_KEY) || "en";
           status.textContent =
             lang === "pa"
               ? "ਸੁਨੇਹਾ ਭੇਜ ਦਿੱਤਾ ਗਿਆ! ਅਸੀਂ ਜਲਦੀ ਸੰਪਰਕ ਕਰਾਂਗੇ।"
-              : "Message sent! We'll get back to you soon.";
+              : "Message sent! We'll get back to you the same day.";
           status.className = "form-status success";
           form.reset();
         } else {
@@ -77,11 +87,10 @@
         }
       })
       .catch(function () {
-        var lang = localStorage.getItem(STORAGE_KEY) || "en";
         status.textContent =
           lang === "pa"
-            ? "ਭੇਜਣ ਵਿੱਚ ਅਸਫ਼ਲ। ਕਿਰਪਾ ਕਰਕੇ ਕਾਲ ਕਰੋ।"
-            : "Failed to send. Please call us instead.";
+            ? "ਭੇਜਣ ਵਿੱਚ ਅਸਫ਼ਲ। ਕਿਰਪਾ ਕਰਕੇ ਟੈਕਸਟ ਕਰੋ (289) 275-3973।"
+            : "Couldn't send — please text us instead at (289) 275-3973.";
         status.className = "form-status error";
       })
       .finally(function () {
