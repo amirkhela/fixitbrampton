@@ -10,6 +10,11 @@
       var text = els[i].getAttribute("data-" + lang);
       if (text !== null && text !== undefined) els[i].textContent = text;
     }
+    var htmlEls = document.querySelectorAll("[data-en-html]");
+    for (var j = 0; j < htmlEls.length; j++) {
+      var html = htmlEls[j].getAttribute("data-" + lang + "-html");
+      if (html !== null && html !== undefined) htmlEls[j].innerHTML = html;
+    }
     if (langLabel) langLabel.textContent = lang === "en" ? "ਪੰਜਾਬੀ" : "English";
     document.documentElement.lang = lang === "pa" ? "pa" : "en";
     try {
