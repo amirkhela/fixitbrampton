@@ -837,6 +837,309 @@ a.service-card:hover::after {
 }
 
 /* ======================================================
+   WhatsApp button variant
+   ====================================================== */
+.btn-whatsapp {
+  background: #25D366;
+  color: #0b3d1e;
+  box-shadow: 0 2px 0 #128C4B, var(--shadow-md);
+}
+.btn-whatsapp:hover {
+  background: #20b658;
+  color: #0b3d1e;
+  box-shadow: 0 2px 0 #0e6d39, var(--shadow-lg);
+  transform: translateY(-1px);
+}
+.btn-whatsapp svg { color: #0b3d1e; }
+
+.wa-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #0b3d1e;
+  box-shadow: 0 2px 0 #128C4B, var(--shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.wa-icon-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 #128C4B, var(--shadow-md);
+  color: #0b3d1e;
+}
+
+/* ======================================================
+   Pricing Transparency
+   ====================================================== */
+.pricing {
+  padding: 96px 0;
+  background: var(--paper-deep);
+  position: relative;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.pricing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 85% 15%, rgba(201, 123, 46, 0.08), transparent 50%);
+  pointer-events: none;
+}
+.pricing > .container { position: relative; }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+.price-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 28px 26px 26px;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s;
+}
+.price-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--amber-soft);
+}
+.price-card.highlight {
+  border-color: var(--amber);
+  background: var(--cream-card);
+  box-shadow: var(--shadow-md);
+}
+.price-card.highlight::before {
+  content: "Most asked";
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  background: var(--amber);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+.price-card h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.price-card .price-range {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--amber-dark);
+  line-height: 1.1;
+  margin: 10px 0 12px;
+  letter-spacing: -0.015em;
+  font-variation-settings: "opsz" 144;
+}
+.price-card .price-range small {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-mute);
+  font-weight: 500;
+  letter-spacing: 0;
+  margin-left: 4px;
+}
+.price-card p {
+  color: var(--ink-mute);
+  font-size: 14px;
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+.price-card .pa-caption {
+  display: block;
+  font-family: var(--font-gurmukhi);
+  color: var(--maroon);
+  font-size: 13px;
+  font-weight: 500;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+}
+.price-note {
+  margin-top: 36px;
+  padding: 20px 24px;
+  background: var(--cream-card);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 14px;
+  color: var(--ink-mute);
+  line-height: 1.6;
+}
+.price-note strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+/* ======================================================
+   Reviews Scaffold
+   ====================================================== */
+.reviews {
+  padding: 96px 0;
+  background: var(--paper);
+}
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 8px;
+}
+.review-card {
+  background: var(--cream-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 28px 26px;
+  position: relative;
+}
+.review-card .stars {
+  color: var(--amber);
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+.review-card .review-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 180px;
+  justify-content: center;
+  text-align: center;
+  color: var(--ink-mute);
+}
+.review-card .review-empty .dashed {
+  width: 42px; height: 42px;
+  border: 2px dashed var(--amber-soft);
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--amber-dark);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+}
+.review-card h4 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  font-size: 18px;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.review-card p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+.review-card.review-cta {
+  background: var(--ink);
+  color: var(--paper);
+  border-top: 4px solid var(--amber);
+}
+.review-card.review-cta h4 { color: var(--paper); }
+.review-card.review-cta p { color: rgba(253, 250, 244, 0.7); margin-bottom: 14px; }
+.review-card.review-cta .pa {
+  font-family: var(--font-gurmukhi);
+  color: var(--amber-soft);
+  display: block;
+  padding-top: 10px;
+  border-top: 1px solid rgba(253, 250, 244, 0.14);
+  font-size: 13px;
+}
+.review-card.review-cta .btn { width: 100%; }
+
+/* ======================================================
+   Floating mobile CTA
+   ====================================================== */
+.floating-cta {
+  position: fixed;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  gap: 10px;
+  z-index: 200;
+  pointer-events: none;
+}
+.floating-cta a {
+  pointer-events: auto;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  box-shadow: 0 12px 24px -8px rgba(26, 18, 11, 0.35), 0 2px 6px rgba(26, 18, 11, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s;
+}
+.floating-cta a:hover { transform: translateY(-2px); }
+.floating-cta .fc-text {
+  background: var(--amber);
+  color: var(--paper);
+}
+.floating-cta .fc-wa {
+  background: #25D366;
+  color: #0b3d1e;
+}
+@media (min-width: 768px) {
+  .floating-cta { display: none; }
+  body.no-float-ghost { padding-bottom: 0; }
+}
+@media (max-width: 767px) {
+  body { padding-bottom: 72px; }
+}
+
+/* ======================================================
+   Scroll Reveal
+   ====================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal.delay-1 { transition-delay: 0.08s; }
+.reveal.delay-2 { transition-delay: 0.16s; }
+.reveal.delay-3 { transition-delay: 0.24s; }
+.reveal.delay-4 { transition-delay: 0.32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Tablet+ adaptations */
+@media (min-width: 640px) {
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  .reviews-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+  .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ======================================================
    Why Choose Us
    ====================================================== */
 .why {
