@@ -1,4 +1,13 @@
+const Sentry = require("@sentry/node");
 const { Resend } = require("resend");
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    tracesSampleRate: 0.1,
+    environment: process.env.VERCEL_ENV || "development",
+  });
+}
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -34,6 +43,8 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error("Resend error:", err);
+    Sentry.captureException(err);
+    await Sentry.flush(2000);
     return res.status(500).json({ error: "Failed to send email" });
   }
 };

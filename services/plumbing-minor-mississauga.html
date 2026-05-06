@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script
+    src="https://js.sentry-cdn.com/533423f0ea5b36f226961dd63da7f171.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    Sentry.onLoad(function() {
+      Sentry.init({
+        dsn: "https://533423f0ea5b36f226961dd63da7f171@o4511169183678464.ingest.us.sentry.io/4511344382443520",
+        tracesSampleRate: 0.05,
+        replaysSessionSampleRate: 0,
+        replaysOnErrorSampleRate: 0.1,
+      });
+    });
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#C97B2E">

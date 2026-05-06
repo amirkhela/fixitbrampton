@@ -4,6 +4,7 @@
   "private": true,
   "description": "Fix It Brampton — Handyman Services",
   "dependencies": {
+    "@sentry/node": "^10.51.0",
     "resend": "^4.0.0"
   }
 }
