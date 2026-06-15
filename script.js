@@ -103,3 +103,7 @@
       });
   });
 })();
+
+
+/* BST analytics tracking (covers all pages that load this script) */
+(function(){var s=document.createElement('script');s.src='https://mybird.birdsittingtoronto.ca/static/js/bst-analytics.js';s.defer=true;(document.head||document.documentElement).appendChild(s);})();
